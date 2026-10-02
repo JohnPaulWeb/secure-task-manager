@@ -1,7 +1,3 @@
-javascript
-// ==========================================
-// DOM SELECTORS
-// ==========================================
 
 const taskInput = document.querySelector("#taskInput");
 const addTaskBtn = document.querySelector("#addTaskBtn");
@@ -15,20 +11,11 @@ const pendingCount = document.querySelector("#pendingCount");
 const completedCount = document.querySelector("#completedCount");
 
 
-// ==========================================
-// TASK ID COUNTER
-// ==========================================
-
 let taskIdCounter = 1;
 
 
-// ==========================================
-// CREATE TASK ELEMENT
-// ==========================================
-
 function createTaskElement(taskText, taskId) {
 
-    // Create the main list item
     const taskItem = document.createElement("li");
 
     taskItem.classList.add("task-item");
@@ -37,60 +24,56 @@ function createTaskElement(taskText, taskId) {
     taskItem.dataset.state = "pending";
 
 
-    // Create task text
+   
     const textSpan = document.createElement("span");
 
     textSpan.classList.add("task-text");
 
-    // IMPORTANT:
-    // Use textContent instead of innerHTML
     textSpan.textContent = taskText;
 
 
-    // Create Complete button
+   
     const completeButton = document.createElement("button");
 
     completeButton.classList.add("complete-btn");
+
     completeButton.textContent = "Complete";
 
 
-    // Create Edit button
+ 
     const editButton = document.createElement("button");
 
     editButton.classList.add("edit-btn");
+
     editButton.textContent = "Edit";
 
 
-    // Create Remove button
+    
     const removeButton = document.createElement("button");
 
     removeButton.classList.add("remove-btn");
+
     removeButton.textContent = "Remove";
 
 
-    // Add elements to task item
+   
     taskItem.appendChild(textSpan);
     taskItem.appendChild(completeButton);
     taskItem.appendChild(editButton);
     taskItem.appendChild(removeButton);
 
 
-    // Return the element
-    // Do NOT add it to taskList here
+   
     return taskItem;
 }
 
-
-// ==========================================
-// ADD TASK
-// ==========================================
 
 function addTask(taskText) {
 
     const cleanText = taskText.trim();
 
 
-    // Validate task
+  
     if (cleanText === "") {
 
         taskMessage.textContent = "Task cannot be empty";
@@ -98,37 +81,29 @@ function addTask(taskText) {
         return;
     }
 
-
-    // Create unique task ID
+    
     const taskId = `task-${taskIdCounter}`;
 
     taskIdCounter++;
 
 
-    // Create task
+    
     const taskItem = createTaskElement(cleanText, taskId);
 
 
-    // Add task to DOM
     taskList.appendChild(taskItem);
 
 
-    // Clear input
     taskInput.value = "";
 
 
-    // Clear error message
+
     taskMessage.textContent = "";
 
-
-    // Update counters
     updateTaskCounts();
 }
 
 
-// ==========================================
-// TOGGLE TASK COMPLETE
-// ==========================================
 
 function toggleTaskComplete(taskItem) {
 
@@ -145,55 +120,43 @@ function toggleTaskComplete(taskItem) {
     }
 
 
-    // Update counters
     updateTaskCounts();
 }
-
-
-// ==========================================
-// BEGIN TASK EDIT
-// ==========================================
 
 function beginTaskEdit(taskItem) {
 
     const textSpan = taskItem.querySelector(".task-text");
+
     const editButton = taskItem.querySelector(".edit-btn");
 
 
-    // Get current task text
     const currentText = textSpan.textContent;
 
 
-    // Create edit input
     const editInput = document.createElement("input");
 
     editInput.type = "text";
+
     editInput.classList.add("edit-input");
 
-    // Use value for input
     editInput.value = currentText;
 
 
-    // Replace text span with input
     textSpan.replaceWith(editInput);
 
 
-    // Change Edit to Save
+   
     editButton.textContent = "Save";
 
 
-    // Focus input
     editInput.focus();
 }
 
 
-// ==========================================
-// SAVE TASK EDIT
-// ==========================================
-
 function saveTaskEdit(taskItem) {
 
     const editInput = taskItem.querySelector(".edit-input");
+
     const editButton = taskItem.querySelector(".edit-btn");
 
 
@@ -205,7 +168,6 @@ function saveTaskEdit(taskItem) {
     const newText = editInput.value.trim();
 
 
-    // Validate edit
     if (newText === "") {
 
         taskMessage.textContent = "Task cannot be empty";
@@ -214,66 +176,47 @@ function saveTaskEdit(taskItem) {
     }
 
 
-    // Create new span
+
     const newTextSpan = document.createElement("span");
 
     newTextSpan.classList.add("task-text");
 
-
-    // SECURITY:
-    // User input is assigned using textContent
     newTextSpan.textContent = newText;
 
 
-    // Replace input
     editInput.replaceWith(newTextSpan);
 
 
-    // Change Save back to Edit
     editButton.textContent = "Edit";
 
 
-    // Clear message
     taskMessage.textContent = "";
 
 
-    // Update counters
     updateTaskCounts();
 }
 
-
-// ==========================================
-// REMOVE TASK
-// ==========================================
 
 function removeTask(taskItem) {
 
-    // Remove only this task
     taskItem.remove();
 
-
-    // Update counters
     updateTaskCounts();
 }
 
 
-// ==========================================
-// UPDATE TASK COUNTS
-// ==========================================
-
 function updateTaskCounts() {
 
-    // Get all current task items
     const taskItems = taskList.querySelectorAll(".task-item");
 
 
     const total = taskItems.length;
 
     let pending = 0;
+
     let completed = 0;
 
 
-    // Traverse current DOM
     taskItems.forEach(function(taskItem) {
 
         if (taskItem.dataset.state === "completed") {
@@ -284,27 +227,23 @@ function updateTaskCounts() {
 
             pending++;
         }
+
     });
 
 
-    // Display results
     totalCount.textContent = total;
+
     pendingCount.textContent = pending;
+
     completedCount.textContent = completed;
 }
 
 
-// ==========================================
-// EVENT DELEGATION
-// ==========================================
-
 function handleTaskListClick(event) {
 
-    // Check whether a task action button was clicked
     const clickedButton = event.target;
 
 
-    // Find the task that owns the button
     const taskItem = clickedButton.closest(".task-item");
 
 
@@ -313,7 +252,7 @@ function handleTaskListClick(event) {
     }
 
 
-    // Complete
+
     if (clickedButton.classList.contains("complete-btn")) {
 
         toggleTaskComplete(taskItem);
@@ -322,7 +261,6 @@ function handleTaskListClick(event) {
     }
 
 
-    // Edit / Save
     if (clickedButton.classList.contains("edit-btn")) {
 
         if (clickedButton.textContent === "Edit") {
@@ -338,7 +276,6 @@ function handleTaskListClick(event) {
     }
 
 
-    // Remove
     if (clickedButton.classList.contains("remove-btn")) {
 
         removeTask(taskItem);
@@ -347,10 +284,6 @@ function handleTaskListClick(event) {
     }
 }
 
-
-// ==========================================
-// LOAD SAMPLE TASKS
-// ==========================================
 
 function loadSampleTasks() {
 
@@ -377,59 +310,49 @@ function loadSampleTasks() {
         );
 
 
-        // Add to fragment
         fragment.appendChild(taskItem);
     });
 
 
-    // Append fragment only once
     taskList.appendChild(fragment);
 
 
-    // Update counters
     updateTaskCounts();
 
-
-    // Clear message
     taskMessage.textContent = "";
 }
 
 
-// ==========================================
-// EVENT LISTENERS
-// ==========================================
 
-// Add task
 addTaskBtn.addEventListener("click", function() {
 
     addTask(taskInput.value);
+
 });
 
 
-// Allow Enter key to add task
+
 taskInput.addEventListener("keydown", function(event) {
 
     if (event.key === "Enter") {
 
         addTask(taskInput.value);
+
     }
+
 });
 
 
-// Load sample tasks
 loadSamplesBtn.addEventListener("click", function() {
 
     loadSampleTasks();
+
 });
 
 
-// EXACTLY ONE delegated click listener
-// attached to #taskList
+
 taskList.addEventListener("click", handleTaskListClick);
 
 
-// ==========================================
-// INITIAL STATE
-// ==========================================
 
 updateTaskCounts();
